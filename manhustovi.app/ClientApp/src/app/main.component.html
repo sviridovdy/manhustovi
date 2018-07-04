@@ -1,0 +1,11 @@
+<div style="margin-top: 25px">
+  <pagination-component [pageRefs]="pageRefs" [pagesCount]="pagesCount" (loadPageEvent)="loadPostsPage($event)"></pagination-component>
+</div>
+
+<div *ngFor="let post of posts">
+  <post-component [post]="post" [showFullComments]="false"></post-component>
+</div>
+
+<div style="margin-bottom: 25px">
+  <pagination-component [pageRefs]="pageRefs" [pagesCount]="pagesCount" (loadPageEvent)="loadPostsPage($event)"></pagination-component>
+</div>

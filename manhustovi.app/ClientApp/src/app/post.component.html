@@ -1,0 +1,39 @@
+<div class="post-container">
+
+  <div class="post-tag" style="cursor: pointer" (click)="this.navigateToPost(post.id)">d{{post.dayNumber}}</div>
+  <div class="post-tag" style="float: right">#{{post.hashTag}}</div>
+
+  <br>
+  <div [innerHtml]="postText | safeHtml"></div>
+  <div *ngIf="isPostTruncated" class="expand-post" (click)="isPostTruncated = false">...</div>
+  <br/>
+
+  <div *ngIf="post.photoAttachments">
+    <photo-attachments-component [photoAttachments]="post.photoAttachments"></photo-attachments-component>
+  </div>
+
+  <div *ngIf="post.videoAttachments">
+    <video-attachment-component *ngFor="let videoAttachment of post.videoAttachments" [source]="videoAttachment"></video-attachment-component>
+  </div>
+
+  <album-attachment-component *ngIf="post.albumAttachment" [albumAttachment]="post.albumAttachment"></album-attachment-component>
+
+  <div *ngIf="post.linkAttachment">
+    <a [href]="post.linkAttachment.url">{{post.linkAttachment.title}}</a>
+  </div>
+
+  <div class="post-footer">
+    <fb-like href="{{'http://manhustovi.life/post/' + post.id}}" layout="button_count"></fb-like>
+    <div *ngIf="showFullComments === false" class="comments-count-block" (click)="expandComments()">
+      <comments-count-component [url]="'http://manhustovi.life/post/'+post.id"></comments-count-component>
+    </div>
+    <div [style.flex-grow]="showFullComments === true ? 1: null" style="text-align: right">
+      <span class="post-date-day">{{getPostWeekDay()}}</span>
+      <span class="post-date-date">{{getPostDate()}}</span>
+    </div>
+  </div>
+
+  <hr *ngIf="showFullComments === true">
+  <fb-comments *ngIf="showFullComments === true" href="{{'http://manhustovi.life/post/' + post.id}}" [mobile]="true" orderBy="reverse_time"></fb-comments>
+
+</div>

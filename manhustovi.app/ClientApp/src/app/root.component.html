@@ -1,0 +1,2 @@
+<app-splash-component *ngIf="this.showSplash" (done)="this.onSplashDone()"></app-splash-component>
+<main-component *ngIf="this.showMain" [style.display]="this.showSplash ? 'none' : 'block'"></main-component>

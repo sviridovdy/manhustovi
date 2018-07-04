@@ -1,0 +1,13 @@
+.comments-count-icon {
+  background: url('../../assets/comment.png');
+  width: 28px;
+  height: 28px;
+  background-size: cover;
+  display: inline-block;
+}
+
+.comments-count-number {
+  color: #616770;
+  display: inline-block;
+  vertical-align: top;
+}

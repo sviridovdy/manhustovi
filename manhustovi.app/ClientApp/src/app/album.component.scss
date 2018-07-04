@@ -1,0 +1,95 @@
+// sass-lint:disable no-color-literals
+.album-header {
+  align-items: center;
+  background: #fff;
+  box-shadow: 0 5px 7px #808080;
+  display: flex;
+  height: 45px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+%album-footer {
+  background: #fff;
+  bottom: 0;
+  box-shadow: 0 -5px 7px #808080;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+}
+
+.album-collapsed-footer {
+  @extend %album-footer;
+  height: 30px;
+}
+
+.album-expanded-footer {
+  @extend %album-footer;
+  height: 40vh;
+}
+
+.comments-count-block {
+  cursor: pointer;
+  flex-grow: 1;
+  margin-left: 25px;
+}
+
+%album-label {
+  background: rgba(0, 0, 0, .5);
+  border-radius: 5px;
+  color: #fff;
+  margin: 5px;
+  padding: 5px 10px;
+}
+
+.album-size-label {
+  @extend %album-label;
+}
+
+.album-title-label {
+  @extend %album-label;
+  max-width: 50vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+%album-photos {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: absolute;
+  top: 45px;
+  width: 100%;
+}
+
+.album-full-photos {
+  @extend %album-photos;
+  bottom: 40px;
+}
+
+.album-reduced-photos {
+  @extend %album-photos;
+  bottom: 40vh;
+}
+
+%photo {
+  border-bottom: 1px solid rgba(0, 0, 0, .66);
+  border-left: 1px solid rgba(0, 0, 0, .33);
+  border-right: 1px solid rgba(0, 0, 0, .33);
+
+}
+
+.full-size-photo {
+  @extend %photo;
+  margin: 7px auto;
+  width: 97%;
+}
+
+.tiny-size-photo {
+  @extend %photo;
+  margin: 7px;
+  width: 30%;
+}

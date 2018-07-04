@@ -1,0 +1,1 @@
+<img *ngFor="let photo of photoAttachments" src="{{photo.previewSrc}}" (click)="openPhoto(photo)" [class]="isPanoramaPhoto(photo) ? 'panorama' : 'photo'"/>

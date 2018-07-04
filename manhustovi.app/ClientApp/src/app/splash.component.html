@@ -1,0 +1,6 @@
+<div class="root">
+  <div class="splash">
+    <div class="top" *ngIf="this.showBottomImage"></div>
+    <div class="bottom" [class.transparent]="this.showTopImage !== true"></div>
+  </div>
+</div>

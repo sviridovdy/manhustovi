@@ -1,0 +1,7 @@
+<div class="album-attachment-wrapper">
+  <div style="height: 50px; margin-bottom: -50px">
+    <div class="album-title-label">{{albumAttachment.title}}</div>
+    <div class="album-size-label">{{albumAttachment.size}}</div>
+  </div>
+  <div class="album-thumb" (click)="this.navigateToAlbum(albumAttachment.id)" [style.background-image]="imageUrl"></div>
+</div>

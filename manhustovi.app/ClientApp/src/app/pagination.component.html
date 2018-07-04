@@ -1,0 +1,7 @@
+<div class="pagination-center">
+  <div class="pagination">
+    <a (click)="loadPage(0)">&laquo;</a>
+    <a *ngFor="let pageRef of pageRefs" (click)="loadPage(pageRef.number - 1)" [class.active]="pageRef.isActive">{{pageRef.number}}</a>
+    <a (click)="loadPage(pagesCount-1)">&raquo;</a>
+  </div>
+</div>

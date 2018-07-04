@@ -1,0 +1,30 @@
+<div *ngIf="album" xmlns="http://www.w3.org/1999/html">
+  <div class="album-header">
+    <div class="album-title-label">{{album.title}}</div>
+    <div class="album-size-label">{{'#'+album.size}}</div>
+    <div style="flex: 1"></div>
+    <div style="background: url('../assets/list.png'); width: 35px; height: 35px;"></div>
+    <toggle-component (onToggled)="tinyPhotoMode = $event"></toggle-component>
+    <div style="background: url('../assets/grid.png'); width: 35px; height: 35px; margin-right: 5px"></div>
+  </div>
+  <div [class]="showFullComments ? 'album-reduced-photos' : 'album-full-photos'">
+    <img *ngFor="let photo of album.photos" [src]="photo.previewSrc" [class]="tinyPhotoMode ? 'tiny-size-photo' : 'full-size-photo'" (click)="openPhoto(photo)"/>
+  </div>
+  <div [class]="showFullComments ? 'album-expanded-footer' : 'album-collapsed-footer'">
+    <div style="display: flex;">
+      <fb-like style="margin-left: 10px" href="{{albumUri}}" layout="button_count"></fb-like>
+      <div *ngIf="showFullComments === false" class="comments-count-block" (click)="showFullComments = true">
+        <comments-count-component [url]="albumUri"></comments-count-component>
+      </div>
+      <div *ngIf="showFullComments === true" class="comments-count-block" (click)="showFullComments = false">
+        <img src="../assets/collapse.png" style="vertical-align: middle" />
+      </div>
+      <div style="text-align: right; flex-grow: 1; margin-right: 10px">
+        <span class="post-date-day">{{getAlbumWeekDay()}}</span>
+        <span class="post-date-date">{{getAlbumDate()}}</span>
+      </div>
+    </div>
+    <hr *ngIf="showFullComments === true">
+    <fb-comments *ngIf="showFullComments === true" href="{{albumUri}}" [mobile]="true" orderBy="reverse_time"></fb-comments>
+  </div>
+</div>

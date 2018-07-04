@@ -1,0 +1,19 @@
+.photo, .panorama {
+  margin: 7px 0;
+  width: 100%;
+  border-left: 1px solid rgba(0, 0, 0, 0.33);
+  border-right: 1px solid rgba(0, 0, 0, 0.33);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.66);
+}
+
+@media only screen and (min-width: 500px) {
+  .photo {
+    margin: 7px;
+    width: calc(50% - 16px);
+  }
+
+  .panorama {
+    margin: 7px;
+    width: calc(100% - 16px);
+  }
+}
