@@ -4,6 +4,7 @@ using Amazon.Runtime;
 using manhustovi.app.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
@@ -59,6 +60,14 @@ namespace manhustovi.app
 			{
 				app.ApplicationServices.GetService<PostsRepository>().LoadData();
 				app.ApplicationServices.GetService<AlbumsRepository>().LoadData();
+			});
+
+			app.Use(async (context, next) =>
+			{
+				if (context.Request.Headers.TryGetValue("X-Forwarded-Proto", out var value) && value == "http")
+					context.Response.Redirect(UriHelper.BuildAbsolute("https", context.Request.Host, context.Request.PathBase, context.Request.Path, context.Request.QueryString));
+				else
+					await next();
 			});
 			app.UseSpa(spa =>
 			{
