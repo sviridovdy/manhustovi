@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
-body {
+body.blah {
   font-family: 'Roboto', sans-serif;
   padding: 0;
   margin: 0;
@@ -45,7 +45,7 @@ body {
     font-size: 10pt
   }
 
-  body {
+  body.blah {
     font-size: 12pt;
   }
 }
@@ -63,7 +63,7 @@ body {
     font-size: 10pt
   }
 
-  body {
+  body.blah {
     font-size: 12pt;
   }
 }
