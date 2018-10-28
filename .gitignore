@@ -5,3 +5,4 @@ obj/
 *.user
 launchSettings.json
 appsettings.json
+pack.ps1
