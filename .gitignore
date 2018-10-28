@@ -1,1 +1,7 @@
 .vs/
+bin/
+obj/
+*.pfx
+*.user
+launchSettings.json
+appsettings.json
