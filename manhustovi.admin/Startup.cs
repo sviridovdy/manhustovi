@@ -1,10 +1,17 @@
 using System.Threading.Tasks;
+using Amazon;
+using Amazon.DynamoDBv2;
+using Amazon.Runtime;
+using Amazon.S3;
+using manhustovi.admin.Repositories;
+using manhustovi.admin.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,6 +44,17 @@ namespace manhustovi.admin
 			}).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
 			services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
+
+			var endpoint = RegionEndpoint.GetBySystemName(Configuration["endpoint"]);
+			var credentials = new BasicAWSCredentials(Configuration["accessKey"], Configuration["secretKey"]);
+			var dynamoDbClient = new AmazonDynamoDBClient(credentials, endpoint);
+			var s3Client = new AmazonS3Client(credentials, endpoint);
+
+			services.AddSingleton(dynamoDbClient);
+			services.AddSingleton(s3Client);
+			services.AddSingleton<PostsRepository>();
+			services.AddSingleton<PhotosRepository>();
+			services.AddSingleton<PostsService>();
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -67,7 +85,7 @@ namespace manhustovi.admin
 
 				if (env.IsDevelopment())
 				{
-					spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+					spa.UseAngularCliServer("start");
 				}
 			});
 		}
