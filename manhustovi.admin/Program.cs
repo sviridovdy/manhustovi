@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace manhustovi.admin
 {
@@ -12,6 +13,12 @@ namespace manhustovi.admin
 
 		public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
 			WebHost.CreateDefaultBuilder(args)
+				.ConfigureLogging((hostingContext, logging) =>
+				{
+					logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+					logging.AddConsole(options => options.IncludeScopes = true);
+					logging.AddDebug();
+				})
 				.UseStartup<Startup>();
 	}
 }

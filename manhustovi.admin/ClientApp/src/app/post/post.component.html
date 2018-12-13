@@ -1,0 +1,31 @@
+<div class="post-comp">
+    <div class="content">
+        <div class="header">
+            <span class="day" (click)="onDayClick()">d{{dayNumber}}</span>
+            <svg class="add-btn" width="32" height="32" (click)="showAddPopup = true">
+                <circle cx="16" cy="16" r="15" fill="#001228" stroke="#ba7316" />
+                <path d="M8,16 L24,16 M16,8 L16,24" stroke="#ba7316" stroke-width="2" />
+            </svg>
+            <span class="post-btn" (click)="onPostCreate()">Post!</span>
+        </div>
+        <div #imagesContainer class="images">
+            <div *ngFor="let photo of photos">
+                <img src={{photo.previewSrc}} (click)="photo.showControls = true" />
+            </div>
+        </div>
+        <textarea [(ngModel)]="text"></textarea>
+        <br>
+        <span style="color: white">{{result}}</span>
+    </div>
+    <div *ngIf="this.showAddPopup" class="add-popup" (click)="showAddPopup = false">
+        <div class="add-content">
+            <div (click)="onAddImageClick()">Image</div>
+            <hr>
+            <div>Video</div>
+            <hr>
+            <div>Link</div>
+        </div>
+    </div>
+    <input #dateSelector type="date" [ngModel]="postDate | date:'yyyy-MM-dd'" (ngModelChange)="setPostDate($event)" />
+    <input #imageAttachInput type="file" name="pic" accept="image/*" (change)="onAttachmentsChange()">
+</div>

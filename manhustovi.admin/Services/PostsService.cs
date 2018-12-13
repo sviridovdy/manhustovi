@@ -73,11 +73,9 @@ namespace manhustovi.admin.Services
 					photoAttachments.Add(photoAttachment);
 				}
 
-				var nextPostId = await nextPostIdTask;
-				var post = new Post(nextPostId, createPostRequest.Text, createPostRequest.Hashtag, timeStamp, createPostRequest.DayNumber, photoAttachments);
-				var savePostTask = _postsRepository.PutItemAsync(post);
-
-				await Task.WhenAll(photoTasks.Append(savePostTask));
+				await Task.WhenAll(photoTasks.Append(nextPostIdTask));
+				var post = new Post(nextPostIdTask.Result, createPostRequest.Text, createPostRequest.Hashtag, timeStamp, createPostRequest.DayNumber, photoAttachments);
+				await _postsRepository.PutItemAsync(post);
 				_logger.LogInformation($"post created within {(int) sw.ElapsedMilliseconds} ms");
 			}
 		}

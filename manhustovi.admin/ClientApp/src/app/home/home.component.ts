@@ -27,4 +27,8 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['/signin']);
     }
   }
+
+  onNewPost() {
+    this.router.navigate(['/new'])
+  }
 }
