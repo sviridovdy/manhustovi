@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Threading.Tasks;
 using manhustovi.admin.Models;
 using manhustovi.admin.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +10,8 @@ namespace manhustovi.admin.Controllers
 	public class PostsController : Controller
 	{
 		[HttpPost]
-		public async Task<IActionResult> Create([FromServices] PostsService postsService)
+		[RequestSizeLimit(104_857_600)]
+		public IActionResult Create([FromServices] PostsService postsService)
 		{
 			var createPostRequest = JsonConvert.DeserializeObject<CreatePostRequest>(Request.Form["post"].ToString());
 			foreach (var formFile in Request.Form.Files.GetFiles("photo"))
@@ -26,8 +26,8 @@ namespace manhustovi.admin.Controllers
 				}
 			}
 
-			await postsService.CreatePostAsync(createPostRequest);
-			return Ok();
+			var createPostResponse = postsService.CreatePost(createPostRequest);
+			return Json(createPostResponse);
 		}
 	}
 }

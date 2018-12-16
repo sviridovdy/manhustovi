@@ -22,6 +22,8 @@ namespace manhustovi.admin.Services
 
 		private readonly SemaphoreSlim _semaphore;
 
+		private readonly Dictionary<Guid, ProcessingEvents> _eventsMap;
+
 		public PostsService(PostsRepository postsRepository, PhotosRepository photosRepository, ILogger<PostsService> logger)
 		{
 			_postsRepository = postsRepository;
@@ -30,9 +32,28 @@ namespace manhustovi.admin.Services
 			var cpuCount = Environment.ProcessorCount;
 			_logger.LogInformation($"Cpu count = {cpuCount}");
 			_semaphore = new SemaphoreSlim(cpuCount, cpuCount);
+			_eventsMap = new Dictionary<Guid, ProcessingEvents>();
 		}
 
-		public async Task CreatePostAsync(CreatePostRequest createPostRequest)
+		public CreatePostResponse CreatePost(CreatePostRequest createPostRequest)
+		{
+			var id = Guid.NewGuid();
+			_eventsMap[id] = new ProcessingEvents();
+			Task.Run(() => CreatePostAsync(id, createPostRequest));
+			return new CreatePostResponse(id);
+		}
+
+		public string[] GetEvents(Guid id)
+		{
+			if (!_eventsMap.TryGetValue(id, out var processingEvents))
+			{
+				return null;
+			}
+
+			return processingEvents.DrainEvents();
+		}
+
+		private async Task CreatePostAsync(Guid id, CreatePostRequest createPostRequest)
 		{
 			using (_logger.BeginScope($"Creating post for day {createPostRequest.DayNumber}"))
 			{
@@ -69,14 +90,20 @@ namespace manhustovi.admin.Services
 					{
 						photoAttachment.PreviewSrc = task.Result.location;
 					});
-					photoTasks.AddRange(new[] {originalResizeTask, mobileResizeTask, previewResizeTask});
+					var index = photoIndex;
+					var batchTask = Task.WhenAll(originalResizeTask, mobileResizeTask, previewResizeTask).ContinueWith(t =>
+					{
+						_eventsMap[id].AddEvent($"Photo attachment #{index + 1} was processed.");
+					});
+					photoTasks.Add(batchTask);
 					photoAttachments.Add(photoAttachment);
 				}
 
 				await Task.WhenAll(photoTasks.Append(nextPostIdTask));
-				var post = new Post(nextPostIdTask.Result, createPostRequest.Text, createPostRequest.Hashtag, timeStamp, createPostRequest.DayNumber, photoAttachments);
+				var post = new Post(nextPostIdTask.Result, createPostRequest.Text, createPostRequest.Hashtag, timeStamp, createPostRequest.DayNumber, createPostRequest.VideoUrl, photoAttachments);
 				await _postsRepository.PutItemAsync(post);
 				_logger.LogInformation($"post created within {(int) sw.ElapsedMilliseconds} ms");
+				_eventsMap[id].Complete();
 			}
 		}
 
@@ -98,7 +125,7 @@ namespace manhustovi.admin.Services
 			}
 		}
 
-		private (int width, int height, byte[] data) ResizeImage(byte[] data, int maxWidth)
+		private static (int width, int height, byte[] data) ResizeImage(byte[] data, int maxWidth)
 		{
 			var input = new MemoryStream(data);
 			using (var inputStream = new SKManagedStream(input))
@@ -114,7 +141,7 @@ namespace manhustovi.admin.Services
 							using (var output = new MemoryStream())
 							{
 								image.Encode(SKEncodedImageFormat.Jpeg, 100).SaveTo(output);
-								return (original.Width, original.Height, output.ToArray());
+								return (width, height, output.ToArray());
 							}
 						}
 					}
