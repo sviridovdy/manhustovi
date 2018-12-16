@@ -1,5 +1,5 @@
 <div class="root">
     <span *ngIf="wrongPassword">Wrong password</span>
     <span *ngIf="unknownError">Damn it!</span>
-    <input type="text" [(ngModel)]="oneTimeCode" />
+    <input type="text" [(ngModel)]="oneTimeCode"  inputmode="numeric"/>
 </div>

@@ -1,0 +1,10 @@
+.upload-comp {
+    background-color: #041e3f;
+    height: 100vh;
+    padding: 25px;
+}
+
+.upload-events {
+    max-height: 100vh;
+    overflow-y: scroll;
+}

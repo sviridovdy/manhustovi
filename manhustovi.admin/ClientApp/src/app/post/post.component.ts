@@ -1,9 +1,9 @@
 import * as Sortable from 'sortablejs';
-
 import { Router } from '@angular/router';
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { CreatePostRequest } from '../models/createPostRequest';
 import { Photo } from '../models/photo';
+import { UploadService } from '../upload.service';
 
 @Component({
     selector: 'app-post',
@@ -17,19 +17,23 @@ export class PostComponent implements OnInit {
 
     showAddPopup = false;
 
+    showVideoPopup = false;
+
     postDate: Date;
 
     text = 'M: ';
 
     photos: Photo[] = [];
 
+    videoUrl: string;
+
+    videoPreviewUrl: string;
+
     @ViewChild('dateSelector') dateSelector;
 
     @ViewChild('imagesContainer') imagesContainer;
 
     @ViewChild('imageAttachInput') imageAttachInput;
-
-    result: string;
 
     get dayNumber(): number {
         const startDate = new Date(2016, 2, 9);
@@ -41,8 +45,7 @@ export class PostComponent implements OnInit {
         this.showDaySelector = false;
     }
 
-
-    constructor(private router: Router) {
+    constructor(private router: Router, private uploadService: UploadService) {
         const now = new Date();
         this.postDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     }
@@ -54,15 +57,36 @@ export class PostComponent implements OnInit {
         const sortable = Sortable.create(this.imagesContainer.nativeElement, options);
     }
 
-    onDayClick() {
+    onPostCreate = () => {
+        const createPostRequest = new CreatePostRequest('мангустові_usa', this.dayNumber, this.text, this.videoPreviewUrl);
+        this.uploadService.createPostRequest = createPostRequest;
+        this.uploadService.photoFiles = this.photos.map(p => p.file);
+        this.router.navigate(['/upload']);
+    }
+
+    onDayClick = () => {
         this.dateSelector.nativeElement.click();
     }
 
-    onAddImageClick() {
+    onAddImageClick = () => {
+        this.showAddPopup = false;
         this.imageAttachInput.nativeElement.click();
     }
 
-    onAttachmentsChange() {
+    onAddVideoClick = () => {
+        this.showAddPopup = false;
+        this.showVideoPopup = true;
+    }
+
+    onVideoUrlKeyPress = (event: KeyboardEvent) => {
+        if (event.key === 'Enter') {
+            this.showVideoPopup = false;
+            const videoNumber = this.videoUrl.match('\/([0-9]+)')[1];
+            this.videoPreviewUrl = `https://player.vimeo.com/video/${videoNumber}`;
+        }
+    }
+
+    onAttachmentsChange = () => {
         for (const file of this.imageAttachInput.nativeElement.files) {
             const reader = new FileReader();
             reader.onload = () => {
@@ -80,26 +104,6 @@ export class PostComponent implements OnInit {
             };
 
             reader.readAsDataURL(file);
-        }
-    }
-
-    async onPostCreate() {
-        const createPostRequest = new CreatePostRequest('мангустові_usa', this.dayNumber, this.text);
-        const formData = new FormData();
-        formData.append('post', JSON.stringify(createPostRequest));
-        for (const photo of this.photos) {
-            formData.append('photo', photo.file);
-        }
-
-        try {
-            const response = await fetch('/api/posts', {
-                method: 'POST',
-                body: formData
-            });
-
-            this.result = response.status === 200 ? 'post created' : `failed to create post. response code = ${response.status}`;
-        } catch (e) {
-            this.result = `failed to create post. error = ${e}`;
         }
     }
 }

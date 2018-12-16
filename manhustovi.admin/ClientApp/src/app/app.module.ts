@@ -8,13 +8,22 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { SignInComponent } from './signin/signin.component';
 import { PostComponent } from './post/post.component';
+import { ProgressBarComponent } from './progress-bar/progress-bar.component';
+import { UploadComponent } from './upload/upload.component';
+import { UploadService } from './upload.service';
+import { SafeHtmlPipe, SafePipe } from './safe.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     SignInComponent,
-    PostComponent
+    PostComponent,
+    UploadComponent,
+    ProgressBarComponent,
+    SafePipe,
+    SafeHtmlPipe,
+
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -23,10 +32,11 @@ import { PostComponent } from './post/post.component';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'signin', component: SignInComponent, pathMatch: 'full' },
-      { path: 'new', component: PostComponent, pathMatch: 'full' }
+      { path: 'new', component: PostComponent, pathMatch: 'full' },
+      { path: 'upload', component: UploadComponent, pathMatch: 'full' }
     ])
   ],
-  providers: [],
+  providers: [UploadService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

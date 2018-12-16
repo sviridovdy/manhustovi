@@ -1,0 +1,11 @@
+.progress-bar-background {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+}
+
+.progress-bar-foreground {
+    background-color: #2196F3;
+    border-radius: 5px;
+    height: 10px;
+    padding: 0.01em 5px;
+}

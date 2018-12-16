@@ -27,6 +27,10 @@ input[type=file] {
     visibility: hidden;
 }
 
+input[type=text] {
+    color: #041e3f;
+}
+
 .images {
     display: grid;
     margin: 1em;
@@ -60,7 +64,7 @@ textarea {
     top: 25%;
     left: 50%;
     transform: translate(-50%, -25%);
-    width: 50vw;
+    min-width: 50vw;
     border-radius: 15px;
     padding: 0 20px;
     color: white;
@@ -76,3 +80,22 @@ textarea {
 .add-content>div {
     padding: 15px;
 }
+
+.video-outer{
+    margin: 15px auto;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .video-inner{
+    position: relative;
+    height: 0px;
+    padding-bottom: 56.25%;
+  }
+  
+  .video-inner iframe{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  

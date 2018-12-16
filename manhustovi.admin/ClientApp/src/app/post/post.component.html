@@ -8,22 +8,35 @@
             </svg>
             <span class="post-btn" (click)="onPostCreate()">Post!</span>
         </div>
-        <div #imagesContainer class="images">
-            <div *ngFor="let photo of photos">
-                <img src={{photo.previewSrc}} (click)="photo.showControls = true" />
+        <div>
+            <div #imagesContainer class="images">
+                <div *ngFor="let photo of photos">
+                    <img src={{photo.previewSrc}} (click)="photo.showControls = true" />
+                </div>
+            </div>
+            <textarea [(ngModel)]="text"></textarea>
+            <div *ngIf="videoPreviewUrl" class="video-outer">
+                <div class="video-inner">
+                    <iframe [src]="videoPreviewUrl | safe" frameborder="0"></iframe>
+                </div>
             </div>
         </div>
-        <textarea [(ngModel)]="text"></textarea>
-        <br>
-        <span style="color: white">{{result}}</span>
     </div>
-    <div *ngIf="this.showAddPopup" class="add-popup" (click)="showAddPopup = false">
-        <div class="add-content">
+    <div *ngIf="showAddPopup" class="add-popup" (click)="showAddPopup = false">
+        <div class="add-content" (click)="$event.stopPropagation()">
             <div (click)="onAddImageClick()">Image</div>
             <hr>
-            <div>Video</div>
+            <div (click)="onAddVideoClick()">Video</div>
             <hr>
             <div>Link</div>
+        </div>
+    </div>
+    <div *ngIf="showVideoPopup" class="add-popup" (click)="showVideoPopup = false">
+        <div class="add-content" (click)="$event.stopPropagation()">
+            <div>Enter video url</div>
+            <div>
+                <input type="text" [(ngModel)]="videoUrl" (keypress)="onVideoUrlKeyPress($event)" />
+            </div>
         </div>
     </div>
     <input #dateSelector type="date" [ngModel]="postDate | date:'yyyy-MM-dd'" (ngModelChange)="setPostDate($event)" />

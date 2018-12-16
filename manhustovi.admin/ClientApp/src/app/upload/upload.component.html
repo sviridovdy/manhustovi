@@ -1,0 +1,11 @@
+<div class="upload-comp">
+    <div *ngIf="showUploadProgress">
+        <app-progress-bar [progress]="uploadProgressValue"></app-progress-bar>
+        <span style="color: white">{{uploadProgressText}}</span>
+        <br>
+        <span style="color: white">{{uploadResponseText}}</span>
+    </div>
+    <div *ngIf="uploadEvents.length" class="upload-events">
+        <div *ngFor="let e of uploadEvents" style="color: white">{{e}}</div>
+    </div>
+</div>
