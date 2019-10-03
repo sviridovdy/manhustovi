@@ -55,6 +55,9 @@ namespace manhustovi.app
 					name: "default",
 					template: "{controller}/{action=Index}/{id?}");
 			});
+
+			app.UseMiddleware<DynamicRoutesMiddleware>();
+
 			applicationLifetime.ApplicationStarted.Register(() =>
 			{
 				app.ApplicationServices.GetService<PostsRepository>().LoadData();

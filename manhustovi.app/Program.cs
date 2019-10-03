@@ -16,6 +16,7 @@ namespace manhustovi.app
 
 		public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
 			WebHost.CreateDefaultBuilder(args)
+				.ConfigureAppConfiguration(c => c.AddJsonFile("dynamicRoutes.json", false, true))
 				.UseStartup<Startup>()
 				.UseKestrel(options =>
 				{
